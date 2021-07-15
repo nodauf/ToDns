@@ -17,11 +17,11 @@ func (options Options) Serve() {
 	if len(DataToSend) == 0 {
 		log.FATAL.Fatalln("Something went wrong, no data to send. Exiting")
 	}
-	log.INFO.Println(strconv.Itoa(len(DataToSend)-1) + " parts to send")
+	log.INFO.Println(strconv.Itoa(len(DataToSend)) + " parts to send")
 
 	// Listen for incoming connections.
 	addr := net.UDPAddr{
-		Port: 5354,
+		Port: 53,
 		IP:   net.ParseIP("0.0.0.0"),
 	}
 	conn, err := net.ListenUDP("udp", &addr)

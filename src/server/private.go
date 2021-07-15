@@ -47,8 +47,12 @@ func handleRequest(buf []byte) []byte {
 	domainRequested := q.Name.String()
 	log.INFO.Println("DNS Request: " + domainRequested)
 
+	// if the format is <id>.d.<domain> it is for download
 	if strings.Split(domainRequested, ".")[1] == "d" {
 		return download(buf, header, q, domainRequested)
+		// if the format is <id>.u.<domain> it is for download
+	} else if strings.Split(domainRequested, ".")[1] == "u" {
+		return upload(buf, header, q, domainRequested)
 	}
 	log.ERROR.Println("Unknow action")
 	return []byte{}
@@ -57,13 +61,13 @@ func handleRequest(buf []byte) []byte {
 
 func download(buf []byte, header dnsmessage.Header, q dnsmessage.Question, domainRequested string) []byte {
 	if q.Type.String() != "TypeTXT" {
-		log.ERROR.Println("Only answering for TXT DNS query")
+		log.ERROR.Println("Only answering for TXT DNS query to download")
 		return []byte{}
 	}
 
 	idRequested, err := strconv.Atoi(strings.Split(domainRequested, ".")[0])
 	check(err)
-	log.INFO.Println("Requesting chunck " + strconv.Itoa(idRequested) + "/" + strconv.Itoa(len(DataToSend)-1))
+	log.INFO.Println("Requesting chunck " + strconv.Itoa(idRequested+1) + "/" + strconv.Itoa(len(DataToSend)))
 
 	if idRequested > len(DataToSend)-1 {
 		log.ERROR.Println("ID requested is above the size of the array to send")
@@ -94,6 +98,44 @@ func download(buf []byte, header dnsmessage.Header, q dnsmessage.Question, domai
 	bytesToSend, err := buildAnswer.Finish()
 	check(err)
 	return bytesToSend
+}
+
+func upload(buf []byte, header dnsmessage.Header, q dnsmessage.Question, domainRequested string) []byte {
+	if q.Type.String() != "TypeCNAME" {
+		log.ERROR.Println("Only answering for CNAME DNS query to upload")
+		return []byte{}
+	}
+
+	idSent, err := strconv.Atoi(strings.Split(domainRequested, ".")[0])
+	check(err)
+	log.INFO.Println("Chunck sent" + strconv.Itoa(idSent+1))
+
+	/*dataToReturned := DataToSend[idRequested]
+
+	// Response
+
+	headerAnswer := header
+	headerAnswer.Response = true
+	buildAnswer := dnsmessage.NewBuilder([]byte{}, headerAnswer)
+	err = buildAnswer.StartQuestions()
+	check(err)
+	err = buildAnswer.Question(q)
+	check(err)
+	err = buildAnswer.StartAnswers()
+	check(err)
+	resourceHeader := dnsmessage.ResourceHeader{}
+	resourceHeader.Name = q.Name
+	resourceHeader.Class = q.Class
+
+	TXTAnswer := dnsmessage.TXTResource{}
+	TXTAnswer.TXT = append(TXTAnswer.TXT, string(dataToReturned))
+	log.INFO.Println("Payload: " + string(dataToReturned))
+	err = buildAnswer.TXTResource(resourceHeader, TXTAnswer)
+	check(err)
+	bytesToSend, err := buildAnswer.Finish()
+	check(err)
+	return bytesToSend*/
+	return []byte{}
 }
 
 func check(err error) {
