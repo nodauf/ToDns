@@ -14,12 +14,10 @@ var serverOptions server.Options
 var rootCmd = &cobra.Command{
 	Use:   "ToDns",
 	Short: "Transfer over DNS",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Long: `To download a file, the server will split it in multiple chunks (default max size is 250) and send the corresponding chunk according to the TXT query (<numericalValue>.<domainName>.<tld>).
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+To be more stealthy the "wait" argument could be adjust to wait a specific time before answering the request. This will delay all the requests as the clients are not multi threading based.
+The parameter "size" could also be used to send less data for each response.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
