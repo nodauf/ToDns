@@ -4,7 +4,7 @@ i=0
 echo ''> output.b64
 while :
 do
-  RESP=`dig +short $i.d.$1 TXT @localhost -p 5354 | cut -d'"' -f 2`
+  RESP=`dig +short $i.d.$1 TXT | cut -d'"' -f 2`
   if [ "$RESP" = "$error" ];
   then
     echo "Timeout - done"
