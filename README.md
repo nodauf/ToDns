@@ -30,7 +30,7 @@ Flags:
 ```
 
 ## Client
-Clients as been write to several language in client folder.
+Clients as been writen intto several language in client folder.
 
 ## Demo
 
