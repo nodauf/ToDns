@@ -12,8 +12,8 @@ import (
 
 var DataToSend [][]byte
 
-func (options Options) Serve() {
-	DataToSend = readAndSplitFile(options.File, options.Size)
+func (options *Options) Serve() {
+	DataToSend = readAndSplitFile(options.File, options.Size, options.QueryType == "TXT") // if it's TXT we encode to base64
 	if len(DataToSend) == 0 {
 		log.FATAL.Fatalln("Something went wrong, no data to send. Exiting")
 	}
@@ -22,7 +22,7 @@ func (options Options) Serve() {
 	// Listen for incoming connections.
 	addr := net.UDPAddr{
 		Port: 53,
-		IP:   net.ParseIP("0.0.0.0"),
+		IP:   net.ParseIP(options.ListenAddress),
 	}
 	conn, err := net.ListenUDP("udp", &addr)
 	if err != nil {
@@ -31,7 +31,7 @@ func (options Options) Serve() {
 	}
 	// Close the listener when the application closes.
 	defer conn.Close()
-	fmt.Println("Listening on udp :53")
+	fmt.Printf("Listening on udp %s:53\n", options.ListenAddress)
 	for {
 		buf := make([]byte, 1024)
 		rlen, remoteAddr, err := conn.ReadFromUDP(buf)
@@ -41,7 +41,7 @@ func (options Options) Serve() {
 		log.INFO.Println("Incomming request from " + remoteAddr.String())
 		// Handle connections in a new goroutine.
 		go func() {
-			bytesToSend := handleRequest(buf[0:rlen])
+			bytesToSend := options.handleRequest(buf[0:rlen])
 			time.Sleep(time.Duration(options.Wait) * time.Millisecond)
 			_, _, err := conn.WriteMsgUDP(bytesToSend, []byte{}, remoteAddr)
 			if err == nil {

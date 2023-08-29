@@ -34,7 +34,6 @@ https://github.com/nodauf/ToDns
             $finish = $true
         }
     } while (!$finish)
-   $dataBinary = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($dataBase64))
    $decoded = [System.Convert]::FromBase64CharArray($dataBase64, 0, $dataBase64.Length)
 
    Set-Content $OutputFilename -Value $decoded -Encoding Byte
