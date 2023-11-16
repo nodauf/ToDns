@@ -23,7 +23,6 @@ The parameter "size" could also be used to send less data for each response.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(serverOptions.QueryType)
 		// Few settings before
 		if serverOptions.QueryType == "A" {
 			serverOptions.Size = 4 * numberOfIPsReturned
