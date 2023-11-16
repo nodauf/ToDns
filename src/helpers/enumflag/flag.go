@@ -8,8 +8,10 @@ type enumFlag struct {
 }
 
 // New returns a flag.Value implementation for parsing flags with a one-of-a-set value
-func New(target *string, options ...string) *enumFlag {
-	return &enumFlag{target: target, options: options}
+func New(target *string, defaultValue string, options ...string) *enumFlag {
+	var flag = &enumFlag{target: target, options: options}
+	flag.Set(defaultValue)
+	return flag
 }
 
 func (f *enumFlag) String() string {

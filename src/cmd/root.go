@@ -23,6 +23,7 @@ The parameter "size" could also be used to send less data for each response.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(serverOptions.QueryType)
 		// Few settings before
 		if serverOptions.QueryType == "A" {
 			serverOptions.Size = 4 * numberOfIPsReturned
@@ -49,7 +50,7 @@ func init() {
 	rootCmd.Flags().BoolVarP(&serverOptions.Verbose, "verbose", "v", false, "verbose")
 	rootCmd.Flags().StringVarP(&serverOptions.ListenAddress, "listen", "l", "0.0.0.0", "Address to listen on")
 	rootCmd.Flags().VarP(
-		enumflag.New(&serverOptions.QueryType, "TXT", "A"),
+		enumflag.New(&serverOptions.QueryType, "A", "TXT", "A"),
 		"query", "q",
 		"Type of DNS query that will be answered. can be 'TXT' or 'A'")
 	rootCmd.MarkFlagRequired("file")
